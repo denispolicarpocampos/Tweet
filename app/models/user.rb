@@ -1,4 +1,4 @@
-class User < ApplicationRecord 
+class User < ApplicationRecord
   has_secure_password
   validates_length_of :password,
                       maximum: 72,
