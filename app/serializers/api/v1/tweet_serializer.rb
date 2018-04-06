@@ -1,18 +1,30 @@
 module Api
   module V1
-    class UserSerializer < ActiveModel::Serializer # >
-      attributes :id, :name, :email, :tweets_count, :followers_count, :following_count
+    class TweetSerializer < ActiveModel::Serializer
+      attributes :id, :body, :tweet_original_id, :retweets_count, :likes_count, :liked
+      belongs_to :tweet_original
+      belongs_to :user
 
-      def tweets_count
-        object.tweets.count
+      def tweet_original
+        options = { each_serializer: Api::V1::TweetSerializer }
+        ActiveModelSerializers::SerializableResource.new(object.tweet_original, options) if object.tweet_original
       end
 
-      def followers_count
-        object.followers_by_type('User').count
+      def user
+        options = { each_serializer: Api::V1::UserSerializer }
+        ActiveModelSerializers::SerializableResource.new(object.user, options)
       end
 
-      def following_count
-        object.following_users.count
+      def retweets_count
+        object.retweets.count
+      end
+
+      def likes_count
+        object.votes_for.size
+      end
+
+      def liked
+        object.liked_by @current_user
       end
     end
   end
