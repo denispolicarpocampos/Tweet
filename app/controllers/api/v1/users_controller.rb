@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UsersController < Api::V1::ApiController
+    class UsersController < Api::V1::ApiController #>
       before_action :authenticate_user, only: %i[current update destroy]
       before_action :set_user, only: %i[show destroy update following followers]
       load_and_authorize_resource except: %i[followers following create]
@@ -37,19 +37,19 @@ module Api
       end
 
       def following
-        @following = @user.following_users.paginate(page: @page, per_page: 15)
+        @following = @user.following_users.paginate(page: @page)
         render json: @following
       end
 
       def followers
-        @followers = @user.followers_by_type('User').paginate(page: @page, per_page: 15)
+        @followers = @user.followers_by_type('User').paginate(page: @page)
         render json: @followers
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:name, :email, :password, :password_confirmation)
+        params.require(:user).permit(:name, :email, :password, :password_confirmation, :photo)
       end
 
       def set_user

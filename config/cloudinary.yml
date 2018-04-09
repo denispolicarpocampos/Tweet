@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: denispolicarpocampos
+  api_key: '621877231429337'
+  api_secret: CTFljVafwTpDOfiU8LZpe-NTgPM
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: denispolicarpocampos
+  api_key: '621877231429337'
+  api_secret: CTFljVafwTpDOfiU8LZpe-NTgPM
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: denispolicarpocampos
+  api_key: '621877231429337'
+  api_secret: CTFljVafwTpDOfiU8LZpe-NTgPM
+  enhance_image_tag: true
+  static_image_support: false
