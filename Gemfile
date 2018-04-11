@@ -43,6 +43,9 @@ gem 'carrierwave'
 gem 'carrierwave-base64'
 gem 'cloudinary'
 
+# Job scueduler execution
+gem 'sidekiq-scheduler'
+
 group :test do
 # Generate record based in a model
 gem 'factory_bot_rails', "~> 4.0"
