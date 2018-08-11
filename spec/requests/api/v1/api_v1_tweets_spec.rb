@@ -42,6 +42,7 @@ RSpec.describe "Api::V1::Tweets", type: :request do
     end
   end
 
+
   describe 'GET /api/v1/tweets/:id' do
     context 'when tweet exists' do
       let(:user) { create(:user) }
@@ -63,7 +64,7 @@ RSpec.describe "Api::V1::Tweets", type: :request do
       end
 
       context 'retweet' do
-        let(:tweet_original) { create(:tweet) }        
+        let(:tweet_original) { create(:tweet) }
         let(:tweet) { create(:tweet, tweet_original: tweet_original) }
 
         before { get "/api/v1/tweets/#{tweet.id}" }
@@ -92,9 +93,10 @@ RSpec.describe "Api::V1::Tweets", type: :request do
       it { expect(response).to have_http_status(:not_found) }
     end
   end
+
   describe 'POST /api/v1/tweets' do
     context 'Unauthenticated' do
-      it_behaves_like :deny_without_authorization, :put, '/api/v1/users/-1'
+      it_behaves_like :deny_without_authorization, :post, '/api/v1/tweets'
     end
 
     context 'Authenticated' do
@@ -157,41 +159,7 @@ RSpec.describe "Api::V1::Tweets", type: :request do
       end
     end
   end
-  describe 'DELETE /api/v1/tweets/:tweet_id' do
-    context 'Unauthenticated' do
-      it_behaves_like :deny_without_authorization, :put, '/api/v1/users/-1'
-    end
 
-    context 'Authenticated' do
-      context 'Resource owner' do
-        let(:user) { create(:user) }
-        before { @tweet = create(:tweet, user: user) }
-
-        it do
-          delete "/api/v1/tweets/#{@tweet.id}", headers: header_with_authentication(user)
-          expect(response).to have_http_status(:no_content)
-        end
-
-        it 'delete tweet' do
-          expect do
-            delete "/api/v1/tweets/#{@tweet.id}", headers: header_with_authentication(user)
-          end.to change { Tweet.count }.by(-1)
-        end
-      end
-
-      context 'Not resource owner' do
-        let(:user) { create(:user) }
-        let(:other_user) { create(:user) }
-        let(:tweet) { create(:tweet, user: other_user) }
-
-        before do
-          delete "/api/v1/tweets/#{tweet.id}", headers: header_with_authentication(user)
-        end
-
-        it { expect(response).to have_http_status(:forbidden) }
-      end
-    end
-  end
   describe 'PUT /api/v1/tweets/:tweet_id' do
     context 'Unauthenticated' do
       it_behaves_like :deny_without_authorization, :put, '/api/v1/users/-1'
@@ -222,6 +190,42 @@ RSpec.describe "Api::V1::Tweets", type: :request do
 
         before do
           put "/api/v1/tweets/#{tweet.id}", params: { tweet: tweet_params }, headers: header_with_authentication(user)
+        end
+
+        it { expect(response).to have_http_status(:forbidden) }
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/tweets/:tweet_id' do
+    context 'Unauthenticated' do
+      it_behaves_like :deny_without_authorization, :put, '/api/v1/users/-1'
+    end
+
+    context 'Authenticated' do
+      context 'Resource owner' do
+        let(:user) { create(:user) }
+        before { @tweet = create(:tweet, user: user) }
+
+        it do
+          delete "/api/v1/tweets/#{@tweet.id}", headers: header_with_authentication(user)
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it 'delete tweet' do
+          expect do
+            delete "/api/v1/tweets/#{@tweet.id}", headers: header_with_authentication(user)
+          end.to change { Tweet.count }.by(-1)
+        end
+      end
+
+      context 'Not resource owner' do
+        let(:user) { create(:user) }
+        let(:other_user) { create(:user) }
+        let(:tweet) { create(:tweet, user: other_user) }
+
+        before do
+          delete "/api/v1/tweets/#{tweet.id}", headers: header_with_authentication(user)
         end
 
         it { expect(response).to have_http_status(:forbidden) }

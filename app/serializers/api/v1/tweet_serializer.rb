@@ -1,7 +1,7 @@
 module Api
   module V1
-    class TweetSerializer < ActiveModel::Serializer #>
-      attributes :id, :body, :tweet_original_id, :retweets_count, :likes_count, :liked
+    class TweetSerializer < ActiveModel::Serializer # >
+      attributes :id, :body, :tweet_original_id, :retweets_count, :likes_count, :liked, :photo
       belongs_to :tweet_original
       belongs_to :user
 
@@ -24,7 +24,7 @@ module Api
       end
 
       def liked
-        (defined? current_user)? (current_user.liked? object) : false
+        defined?(current_user) && current_user ? (current_user.liked? object) : false
       end
     end
   end

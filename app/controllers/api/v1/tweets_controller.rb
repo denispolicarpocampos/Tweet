@@ -46,7 +46,7 @@ module Api
         end
 
         def tweet_params
-          params.require(:tweet).permit(:body, :tweet_original_id)
+          params.require(:tweet).permit(:body, :tweet_original_id, :photo)
         end
     end
   end
